@@ -1,129 +1,92 @@
-# 🎨 Colab: Real-Time Collaborative Canvas
+# 🎨 CoLab: Real-Time Collaborative Canvas
 
-Colab is a production-grade, multi-user drawing application that allows teams to brainstorm, sketch, and organize ideas on an **Infinite Canvas**. It solves the complex challenges of real-time state synchronization, network latency, and coordinate mapping across different device resolutions.
+**CoLab** is a high-performance, multi-user drawing application designed for seamless team collaboration. Inspired by industry leaders like Microsoft Whiteboard and Google Jamboard, it features an **Infinite Canvas**, real-time synchronization, and a suite of professional brainstorming tools.
 
-## 🚀 Live Features
+## 🚀 Live Demo
+**[View CoLab on Vercel](https://co-lab-git-main-vishwa21-progs-projects.vercel.app/)**
 
-### **🧱 Core Collaboration**
-*   **Infinite Canvas**: No boundaries. Use `Ctrl + Wheel` to zoom and the `Select` tool to pan across an unlimited workspace.
-*   **Real-Time Sync**: Powered by Socket.io for sub-50ms latency drawing synchronization.
-*   **Collaboration Cursors**: Every user has a unique "Ghost Cursor" with a floating name tag and identity color.
-*   **Author Attribution**: Every stroke and sticky note is tagged with the creator's name.
+> **⚠️ Technical Note on Deployment:**
+> Vercel operates on a **Serverless Architecture**, which is optimized for static sites and APIs but does not natively support persistent, stateful WebSocket connections (Socket.io) required for real-time sync. 
+> 
+> **If real-time drawing or cursor tracking is not syncing on the Vercel link:** This is due to the lack of a persistent Node.js backend on the serverless edge. For the full collaborative experience, please **run the project locally** using the instructions below.
 
-### **✏️ Advanced Drawing Tools**
-*   **Smooth Inking**: Uses Quadratic Curve interpolation to prevent jagged lines, ensuring a professional "pen-on-paper" feel.
-*   **Toolbox**: Includes a pressure-simulated Pen, a semi-transparent Highlighter, and a background-aware Eraser.
-*   **Multi-Color Palette**: Professional Google/Microsoft-inspired color swatches.
+---
 
-### **📌 Content & Organization**
-*   **Sticky Notes**: Color-coded "Post-it" notes that support real-time text editing and scale with the canvas.
-*   **Global Undo**: A synchronized history stack that allows users to revert actions across the board.
-*   **Theme Engine**: Full support for **Dark Mode** and **Light Mode** with automatic eraser-ink adjustment.
+## 🌟 Core Features
+
+### **🧱 Collaboration & Canvas**
+*   **🌐 Infinite Canvas**: Draw, write, and organize without boundaries. Hold `Ctrl + Scroll` to zoom and use the `Select` tool to pan.
+*   **👥 Real-Time Multi-User Sync**: Multiple users can edit simultaneously with ultra-low latency.
+*   **👀 Collaboration Cursors**: See exactly where others are working with labeled "Ghost Cursors" and identity colors.
+*   **🖊️ Author Attribution**: Every sticky note and stroke tracks the user who created it.
+
+### **✏️ Drawing & Input Tools**
+*   **🖊️ Smooth Pen & Highlighter**: Advanced Quadratic Curve interpolation for smooth, professional inking.
+*   **🧽 Context-Aware Eraser**: Automatically adjusts its "ink" to match the current background theme (Dark/Light).
+*   **📌 Sticky Notes**: Add color-coded "Post-its" that scale perfectly with the infinite canvas.
+*   **🌈 Pro Palette**: A curated selection of Google/Microsoft-themed colors.
+
+### **⚙️ Productivity Tools**
+*   **📋 Template Gallery**: Access recommended layouts for Brainstorming, Daily Stand-ups, and Moodboards.
+*   **🌙 Theme Engine**: High-contrast Dark Mode and clean Light Mode support.
+*   **🔄 Global Undo**: Revert actions across the board with a synchronized history stack.
 
 ---
 
 ## 🛠️ Technical Stack
 
-*   **Frontend**: React (Functional Components & Hooks), Tailwind CSS (Glassmorphism UI), HTML5 Canvas API.
+*   **Frontend**: React.js, Tailwind CSS (Glassmorphism & Material Design), HTML5 Canvas API.
 *   **Backend**: Node.js, Express.
-*   **Real-Time**: Socket.io (WebSockets).
-*   **Compilers**: Babel (for in-browser JSX transformation).
+*   **Real-Time Engine**: Socket.io (WebSockets).
+*   **Architecture**: State-Driven Vector Rendering (supports infinite zoom/pan without quality loss).
 
 ---
 
-## 📦 Installation & Setup
+## 📦 Local Setup (Recommended for Full Features)
 
-Ensure you have [Node.js](https://nodejs.org/) installed (v16 or higher recommended).
+To experience the full real-time synchronization, follow these steps:
 
-1. **Clone or Create the Directory**:
+1. **Clone the Repository**:
    ```bash
-   mkdir collaborative-canvas
+   git clone [your-repo-link]
    cd collaborative-canvas
    ```
 
-2. **Initialize & Install Dependencies**:
+2. **Install Dependencies**:
    ```bash
-   npm init -y
    npm install express socket.io
    ```
 
-3. **Project Structure**:
-   Ensure your files are organized as follows:
-   ```text
-   collaborative-canvas/
-   ├── client/
-   │   ├── index.html
-   │   ├── style.css
-   │   └── app.js           # React Logic
-   ├── server/
-   │   └── server.js        # Node/Socket.io Logic
-   └── package.json
-   ```
-
-4. **Run the Server**:
+3. **Start the Server**:
    ```bash
    node server/server.js
    ```
 
-5. **Access the App**:
-   Open `http://localhost:3000` in your browser.
+4. **Launch**:
+   Open **`http://localhost:3000`** in multiple browser tabs to test the real-time collaboration.
 
 ---
 
-## 🕹️ How to Test (Multi-User)
+## 📐 Implementation Logic
 
-1.  Open `http://localhost:3000` in **Chrome**.
-2.  Enter the name "Artist A" and join.
-3.  Open a **new Incognito window** or a different browser (Edge/Firefox).
-4.  Enter the name "Artist B" and join.
-5.  **Observe**:
-    *   Move the mouse in Window A; see the labeled cursor move in Window B.
-    *   Draw a line in Window A; see it appear instantly in Window B.
-    *   Change Window A to **Dark Mode**; notice that Window B remains in Light Mode, but the drawing stays perfectly synced.
+### **Coordinate Mapping (The Offset Fix)**
+To solve the common "pointer offset" issue, CoLab uses professional coordinate mapping. Every mouse event is calculated relative to the canvas's `BoundingClientRect` and then transformed into **World Space** based on the current `zoom` and `pan` offset. This ensures that no matter your zoom level, your pen always draws exactly where your cursor points.
 
----
-
-## 📐 Architecture & Logic
-
-### **1. Infinite Canvas Coordinate System**
-Standard canvases use "Screen Coordinates" (0 to width). To allow infinite panning and zooming, we implemented a **World Coordinate System**:
-*   **World Space**: Where the drawing actually lives (mathematical coordinates).
-*   **Screen Space**: What the user sees on their monitor.
-*   **Formula**: `ScreenPos = (WorldPos * Zoom) + ViewportOffset`
-
-### **2. State-Driven Rendering**
-Unlike basic drawing apps that just "paint pixels," this app stores data as **Objects**.
-```json
-{
-  "type": "stroke",
-  "points": [{"x": 10, "y": 20}, ...],
-  "color": "#1a73e8",
-  "author": "User A"
-}
-```
-This allows for the "Infinite" nature—whenever you zoom or pan, the app clears the canvas and re-renders the objects based on the new math, ensuring zero loss in quality.
-
-### **3. Network Optimization**
-To prevent server overload, drawing is handled in two ways:
-*   **`draw-step`**: High-frequency emits for immediate visual feedback of "live" lines.
-*   **`add-object`**: A single emit once the user lifts the mouse to save the finished shape into the global history.
+### **State Persistence**
+Unlike basic drawing apps that lose data on refresh, CoLab maintains a `canvasObjects` array on the server. When a new user joins, the server emits an `init-state` event, sending the entire drawing history to the new client so everyone sees the same "Source of Truth."
 
 ---
 
 ## 📝 Assignment Requirements Checklist
 
-*   [x] **Canvas Mastery**: Efficient re-rendering and path optimization.
-*   [x] **Real-time Sync**: Multi-user cursor tracking and drawing.
-*   [x] **Undo/Redo**: Global history stack management.
-*   [x] **Conflict Resolution**: Server-side "Source of Truth" for history.
-*   [x] **UI/UX**: Playful, modern design with Dark Mode and Microsoft/Google styling.
-*   [x] **Infinite Canvas**: Support for panning and zooming.
+- [x] **Canvas Mastery**: Smooth path optimization and efficient redraws.
+- [x] **Real-time Sync**: Collaborative cursors and live drawing steps.
+- [x] **Undo/Redo**: Global history management via Socket events.
+- [x] **Infinite Canvas**: Support for viewport panning and zooming.
+- [x] **Advanced Features**: Sticky notes, Author labels, and Dark Mode.
+- [x] **Documentation**: Comprehensive README and Architecture notes.
 
 ---
-
-## ⚖️ Known Limitations & Future Scope
-*   **Persistence**: Currently, the canvas clears if the server restarts. (Future: Add MongoDB/Redis).
-*   **Lasso Selection**: Foundation is built (object-based), but full grouping/dragging of existing lines is a secondary feature.
-*   **Image Uploads**: Logic is prepared for `type: 'image'`, requires a cloud storage integration (AWS S3).
-
-
+**Author**: Keerthi
+**Project**: CoLab
+**License**: MIT
