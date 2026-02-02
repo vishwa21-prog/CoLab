@@ -126,7 +126,4 @@ To prevent server overload, drawing is handled in two ways:
 *   **Lasso Selection**: Foundation is built (object-based), but full grouping/dragging of existing lines is a secondary feature.
 *   **Image Uploads**: Logic is prepared for `type: 'image'`, requires a cloud storage integration (AWS S3).
 
----
-**Author**: [Your Name/ID]
-**Time Spent**: ~[X] Hours
-**License**: MIT
+
