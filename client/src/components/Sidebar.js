@@ -1,13 +1,11 @@
 import React from "react";
-import { FiImage, FiLink, FiDownload, FiTrash2, FiGrid } from "react-icons/fi";
+import { FiImage, FiDownload, FiTrash2, FiGrid } from "react-icons/fi";
 
-// Added 'userColor' to props
 const Sidebar = ({ username, userColor, bgType, setBgType, onAddSticky, onClear, onExport, onAddImage, onAddTable }) => {
   return (
     <div className="sidebar pointer-events-auto">
       <div className="section-title">Current User</div>
       <div className="user-card">
-        {/* Use userColor here */}
         <div className="avatar" style={{ background: userColor }}>
             {username.charAt(0).toUpperCase()}
         </div>
@@ -15,7 +13,6 @@ const Sidebar = ({ username, userColor, bgType, setBgType, onAddSticky, onClear,
       </div>
       <div style={{height: 1, background: '#eee'}}></div>
 
-      {/* NEW: Table Tool */}
       <div className="section-title">Insert</div>
       <button className="menu-btn" onClick={onAddTable}>
         <div style={{display:'flex', gap:8, alignItems:'center'}}><FiGrid size={16}/> Table</div>
